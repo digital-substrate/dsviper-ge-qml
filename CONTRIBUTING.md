@@ -1,10 +1,10 @@
-# Contributing to Digital Substrate QML Tools (ge-qml)
+# Contributing to Digital Substrate QML Tools (dsviper-ge-qml)
 
 Thanks for your interest in contributing.
 
 ## Reporting issues
 
-Use [GitHub Issues](https://github.com/digital-substrate/ge-qml/issues) and pick the appropriate template (bug report or feature request).
+Use [GitHub Issues](https://github.com/digital-substrate/dsviper-ge-qml/issues) and pick the appropriate template (bug report or feature request).
 
 ## Submitting pull requests
 

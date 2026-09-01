@@ -1,6 +1,6 @@
 # QML Craftsmanship: Decision Criteria
 
-> *Applied to the ge-qml codebase. Derived from the same Boileau/Saint-Exupéry discipline
+> *Applied to the dsviper-ge-qml codebase. Derived from the same Boileau/Saint-Exupéry discipline
 > that governs Viper Runtime — adapted to declarative UI.*
 
 ## Principle Zero, Applied to QML
@@ -405,9 +405,9 @@ When porting from Qt Widgets:
 
 1. **Read the original method completely** before writing anything
 2. **Use the same types** — `ValueEnumeration`, not a string; `ValueSet`, not Python `set`
-3. **Preserve the same flow** — if ge-py does `ValueKey.keys(key)` to iterate hierarchy
+3. **Preserve the same flow** — if dsviper-ge does `ValueKey.keys(key)` to iterate hierarchy
    forms, do the same; don't invent a different mechanism
-4. **Guard the same edges** — if ge-py checks `value == item.value` before commit, you must too
+4. **Guard the same edges** — if dsviper-ge checks `value == item.value` before commit, you must too
 5. **Verify after writing** — audit method-by-method starting from the original
 
 **Traps found in practice**:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """graph_editor.py — Graph Editor (QML port).
 
-QML equivalent of the graph_editor.py app in ge-py.
+QML equivalent of the graph_editor.py app in dsviper-ge.
 Uses Context singleton (CommitStore + graph_key).
 Adds undo/redo, commit navigation, live mode, graph operations.
 

@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a feature or enhancement for ge-qml
+about: Suggest a feature or enhancement for dsviper-ge-qml
 labels: enhancement
 ---
 

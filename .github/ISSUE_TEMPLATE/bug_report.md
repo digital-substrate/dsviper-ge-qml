@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a problem with ge-qml (dbe, cdbe, or graph_editor)
+about: Report a problem with dsviper-ge-qml (dbe, cdbe, or graph_editor)
 labels: bug
 ---
 
@@ -11,7 +11,7 @@ labels: bug
 <!-- dbe / cdbe / graph_editor -->
 
 ## Environment
-- ge-qml commit/version:
+- dsviper-ge-qml commit/version:
 - Python version:
 - PySide6 version:
 - dsviper version:

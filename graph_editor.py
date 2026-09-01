@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Graph Editor (ge-qml) — entry-point shim.
+"""Graph Editor (dsviper-ge-qml) — entry-point shim.
 
 Thin wrapper that invokes graph_editor/main.py with the right
 sys.path setup. Lets users run:
