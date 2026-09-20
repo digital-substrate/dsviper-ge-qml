@@ -18,8 +18,7 @@ Use [GitHub Issues](https://github.com/digital-substrate/dsviper-ge-qml/issues) 
 Requires Python 3.10-3.14 and PySide6 with QML support.
 
 ```bash
-pip install -r requirements.txt          # PySide6 and deps
-pip install dsviper                      # Viper Python binding
+pip install -r requirements.txt          # PySide6, the dsviper binding and deps
 ```
 
 Launch one of the three apps:
