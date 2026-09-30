@@ -1,4 +1,4 @@
-# Contributing to Digital Substrate QML Tools (dsviper-ge-qml)
+# Contributing to Graph Editor (dsviper-ge-qml)
 
 Thanks for your interest in contributing.
 
@@ -10,8 +10,8 @@ Use [GitHub Issues](https://github.com/digital-substrate/dsviper-ge-qml/issues) 
 
 1. Fork the repository and create a feature branch from `main`
 2. Make your changes (see "Running locally" below)
-3. Verify the app you touched still launches and the flows you changed still work; if
-   you touched `graph_editor/ge/`, run `python3 tests/golden/scenario.py`
+3. Verify the app still launches and the flows you changed still work; if you touched
+   `graph_editor/ge/`, run `python3 tests/golden/scenario.py`
 4. Open a pull request with a clear description of what changed and why
 
 ## Running locally
@@ -22,25 +22,23 @@ Requires Python 3.10-3.14 and PySide6 with QML support.
 pip install -r requirements.txt          # PySide6, the dsviper binding and deps
 ```
 
-Launch one of the three apps:
+Launch the Graph Editor:
 
 ```bash
-python3 dbe/main.py             # Database Editor
-python3 cdbe/main.py            # Commit Database Editor
-python3 graph_editor/main.py    # Graph Editor
+python3 graph_editor.py                           # Launch
+python3 graph_editor.py path/to/database.graph    # Open an existing database
 ```
 
 ## Architecture
 
-Three QML apps built on a shared `dsviper_components_qml/` library (Python models + QML components). `dsviper` provides persistence and commit operations — don't attempt to port Viper.
+A QML app built on the shared `dsviper_components_qml/` library (Python models + QML components). `dsviper` provides persistence and commit operations — don't attempt to port Viper.
 
-- `dbe/` — Database Editor (direct database editing)
-- `cdbe/` — Commit Database Editor (adds undo/redo, live mode, sync)
-- `graph_editor/` — Graph Editor (adds render canvas, vertex/edge operations, Python editor)
+- `graph_editor/` — the Graph Editor: render canvas, vertex/edge operations, Python editor
+- `dsviper_components_qml/` — synced from `dsviper-components-qml` (see the README); don't edit it here
 
-In the Graph Editor, `graph_editor/gei/` is generated from the Graph Editor model by
-`generate.py`: don't edit it by hand, regenerate it (see the README) and commit the
-result. The business functions belong in `graph_editor/ge/`.
+`graph_editor/gei/` is generated from the Graph Editor model by `generate.py`: don't
+edit it by hand, regenerate it (see the README) and commit the result. The business
+functions belong in `graph_editor/ge/`.
 
 A change to `graph_editor/ge/` that is meant to change what a function writes needs the
 golden file re-recorded, deliberately: `python3 tests/golden/scenario.py --record`, and
