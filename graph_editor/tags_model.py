@@ -9,7 +9,7 @@ from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, Pr
 
 from ge.context import Context
 from gei.graph import attachments
-from gei import graph
+from gei import containers, graph
 
 from dsviper_components_qml.collection_difference import OrderedCollectionDifference
 
@@ -64,7 +64,7 @@ class TagsModel(QAbstractListModel):
         self._context.store.dispatch(
             f"Set Tag '{key}':'{value}'",
             lambda m: attachments.Graph.tags.union(
-                m, self._context.graph_key, dict[str, str]({key: value})))
+                m, self._context.graph_key, containers.Map_of_string_to_string({key: value})))
 
     @Slot(str, str)
     def updateTag(self, key: str, value: str):
@@ -73,7 +73,7 @@ class TagsModel(QAbstractListModel):
         self._context.store.dispatch(
             f"Update Tag '{key}':'{value}'",
             lambda m: attachments.Graph.tags.update(
-                m, self._context.graph_key, dict[str, str]({key: value})))
+                m, self._context.graph_key, containers.Map_of_string_to_string({key: value})))
 
     @Slot(list)
     def unsetTags(self, keys):
@@ -82,7 +82,7 @@ class TagsModel(QAbstractListModel):
         self._context.store.dispatch(
             "Unset Tag",
             lambda m: attachments.Graph.tags.subtract(
-                m, self._context.graph_key, set[str](set(keys))))
+                m, self._context.graph_key, containers.Set_of_string(set(keys))))
 
     def _on_database_did_open(self):
         self._enabled = True

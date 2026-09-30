@@ -11,7 +11,7 @@ from PySide6.QtGui import QColor
 from ge.context import Context
 from ge import selection_mixed
 from gei.graph import attachments
-from gei import graph
+from gei import containers, graph
 from list.element import ListVertex, ListEdge
 from graph_sorted_by_value import GraphSortedByValue
 from dsviper_components_qml.collection_difference import OrderedCollectionDifference
@@ -116,8 +116,8 @@ class ListModel(QAbstractListModel):
 
     @Slot(list)
     def setSelection(self, selected_indices):
-        selected_vertices = set[graph.VertexKey]()
-        selected_edges = set[graph.EdgeKey]()
+        selected_vertices = containers.Set_of_Graph_VertexKey()
+        selected_edges = containers.Set_of_Graph_EdgeKey()
 
         for row in selected_indices:
             if 0 <= row < len(self._elements):
@@ -164,7 +164,7 @@ class ListModel(QAbstractListModel):
             # Build sorted list
             sorted_graph = GraphSortedByValue.build(attachment_getting, graph_key)
 
-            vertex_keys = set[graph.VertexKey]()
+            vertex_keys = containers.Set_of_Graph_VertexKey()
             opt_topology = attachments.Graph.topology.get(attachment_getting, graph_key)
             if opt_topology:
                 vertex_keys = opt_topology.vertex_keys
@@ -181,8 +181,8 @@ class ListModel(QAbstractListModel):
                     new_elements.append(list_edge)
 
             # Build selection
-            sel_vertex_keys = set[graph.VertexKey]()
-            sel_edge_keys = set[graph.EdgeKey]()
+            sel_vertex_keys = containers.Set_of_Graph_VertexKey()
+            sel_edge_keys = containers.Set_of_Graph_EdgeKey()
             opt_selection = attachments.Graph.selection.get(attachment_getting, graph_key)
             if opt_selection:
                 selection = opt_selection

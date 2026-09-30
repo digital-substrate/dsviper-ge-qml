@@ -8,7 +8,7 @@ from PySide6.QtCore import QObject, Property, Signal
 
 from ge.context import Context
 from gei.graph import attachments
-from gei import graph
+from gei import containers, graph
 
 
 class StatisticsModel(QObject):
@@ -65,15 +65,15 @@ class StatisticsModel(QObject):
         attachment_getting = self._context.store.attachment_getting()
         graph_key = self._context.graph_key
 
-        vertex_keys = set[graph.VertexKey]()
-        edge_keys = set[graph.EdgeKey]()
+        vertex_keys = containers.Set_of_Graph_VertexKey()
+        edge_keys = containers.Set_of_Graph_EdgeKey()
         if opt := attachments.Graph.topology.get(attachment_getting, graph_key):
             topology = opt
             vertex_keys = topology.vertex_keys
             edge_keys = topology.edge_keys
 
-        selected_vertex_keys = set[graph.VertexKey]()
-        selected_edge_keys = set[graph.EdgeKey]()
+        selected_vertex_keys = containers.Set_of_Graph_VertexKey()
+        selected_edge_keys = containers.Set_of_Graph_EdgeKey()
         if opt := attachments.Graph.selection.get(attachment_getting, graph_key):
             selection = opt
             selected_vertex_keys = selection.vertex_keys
