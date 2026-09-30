@@ -10,7 +10,8 @@ Use [GitHub Issues](https://github.com/digital-substrate/dsviper-ge-qml/issues) 
 
 1. Fork the repository and create a feature branch from `main`
 2. Make your changes (see "Running locally" below)
-3. Verify the app you touched still launches and the flows you changed still work
+3. Verify the app you touched still launches and the flows you changed still work; if
+   you touched `graph_editor/ge/`, run `python3 tests/golden/scenario.py`
 4. Open a pull request with a clear description of what changed and why
 
 ## Running locally
@@ -36,6 +37,14 @@ Three QML apps built on a shared `dsviper_components_qml/` library (Python model
 - `dbe/` — Database Editor (direct database editing)
 - `cdbe/` — Commit Database Editor (adds undo/redo, live mode, sync)
 - `graph_editor/` — Graph Editor (adds render canvas, vertex/edge operations, Python editor)
+
+In the Graph Editor, `graph_editor/gei/` is generated from the Graph Editor model by
+`generate.py`: don't edit it by hand, regenerate it (see the README) and commit the
+result. The business functions belong in `graph_editor/ge/`.
+
+A change to `graph_editor/ge/` that is meant to change what a function writes needs the
+golden file re-recorded, deliberately: `python3 tests/golden/scenario.py --record`, and
+the diff of `tests/golden/golden.json` reviewed with the change.
 
 ## License
 
