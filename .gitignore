@@ -8,3 +8,6 @@ CLAUDE.md
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Deposited by generate.py
+*.dsm.json
