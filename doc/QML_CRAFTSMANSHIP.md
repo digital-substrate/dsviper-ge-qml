@@ -1,11 +1,8 @@
 # QML Craftsmanship: Decision Criteria
 
-> *Applied to the dsviper-ge-qml codebase. Derived from the same Boileau/Saint-Exupéry discipline
-> that governs Viper Runtime — adapted to declarative UI.*
+> *The criteria the dsviper-ge-qml codebase is written and reviewed by, for a declarative UI.*
 
-## Principle Zero, Applied to QML
-
-Boileau: *"Avant donc que d'écrire, apprenez à penser."*
+## Think Before You Write
 
 In imperative C++/Qt, you think about **what the code does** (sequence of operations).
 In declarative QML, you think about **what the UI is** (structure of bindings).
@@ -162,7 +159,7 @@ Assemblies own **shared dialogs** and connect **signals up** from panels to thos
 
 **The rule**: if you need AND in the description, split.
 
-**Saint-Exupéry corollary**: a component is complete not when it has everything it needs,
+**Corollary**: a component is complete not when it has everything it needs,
 but when it has nothing that belongs elsewhere.
 
 **Size guide** (not a hard rule — consequence of the above):
@@ -228,7 +225,7 @@ onNewInstanceRequested: (row) => {
 **Red flag**: `onPropertyChanged: otherThing.property = newValue` — this is an imperative
 synchronization that should be a binding: `otherThing.property: Qt.binding(() => ...)`.
 
-**Boileau corollary**: if the intent is clear, the binding writes itself.
+**Corollary**: if the intent is clear, the binding writes itself.
 If you struggle to express a relationship as a binding, the data flow is unclear.
 Think first, then bind.
 
@@ -448,8 +445,5 @@ Before writing or reviewing any QML/Python change:
 5. **Minimize it** — is there anything I can remove without losing function?
 6. **Surprise-check it** — would a new developer expect to find this here?
 
-> *"Ce que l'on conçoit bien s'énonce clairement,*
-> *Et les mots pour le dire arrivent aisément."*
->
 > If the QML is hard to write, the component boundaries are wrong.
 > Rethink the decomposition, then the code writes itself.
