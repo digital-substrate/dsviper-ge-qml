@@ -7,9 +7,9 @@ from __future__ import annotations
 
 from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, Property
 
-from model.context import Context
-from ge import attachments
-from ge.data import Map_string_to_string, Set_string
+from ge.context import Context
+from gei.graph import attachments
+from gei import graph
 
 from dsviper_components_qml.collection_difference import OrderedCollectionDifference
 
@@ -63,8 +63,8 @@ class TagsModel(QAbstractListModel):
             return
         self._context.store.dispatch(
             f"Set Tag '{key}':'{value}'",
-            lambda m: attachments.graph_graph_tags_union(
-                m, self._context.graph_key, Map_string_to_string({key: value})))
+            lambda m: attachments.Graph.tags.union(
+                m, self._context.graph_key, dict[str, str]({key: value})))
 
     @Slot(str, str)
     def updateTag(self, key: str, value: str):
@@ -72,8 +72,8 @@ class TagsModel(QAbstractListModel):
             return
         self._context.store.dispatch(
             f"Update Tag '{key}':'{value}'",
-            lambda m: attachments.graph_graph_tags_update(
-                m, self._context.graph_key, Map_string_to_string({key: value})))
+            lambda m: attachments.Graph.tags.update(
+                m, self._context.graph_key, dict[str, str]({key: value})))
 
     @Slot(list)
     def unsetTags(self, keys):
@@ -81,8 +81,8 @@ class TagsModel(QAbstractListModel):
             return
         self._context.store.dispatch(
             "Unset Tag",
-            lambda m: attachments.graph_graph_tags_subtract(
-                m, self._context.graph_key, Set_string(set(keys))))
+            lambda m: attachments.Graph.tags.subtract(
+                m, self._context.graph_key, set[str](set(keys))))
 
     def _on_database_did_open(self):
         self._enabled = True
@@ -102,9 +102,9 @@ class TagsModel(QAbstractListModel):
         try:
             attachment_getting = self._context.store.attachment_getting()
             graph_key = self._context.graph_key
-            opt_tags = attachments.graph_graph_tags_get(attachment_getting, graph_key)
+            opt_tags = attachments.Graph.tags.get(attachment_getting, graph_key)
             if opt_tags:
-                tags = opt_tags.unwrap()
+                tags = opt_tags
                 for key, value in tags.items():
                     new_items.append((key, value))
         except Exception as e:

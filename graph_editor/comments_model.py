@@ -8,8 +8,8 @@ from __future__ import annotations
 import dsviper
 from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, Property
 
-from model.context import Context
-from ge import attachments
+from ge.context import Context
+from gei.graph import attachments
 
 from dsviper_components_qml.collection_difference import OrderedCollectionDifference
 
@@ -63,7 +63,7 @@ class CommentsModel(QAbstractListModel):
 
         self._context.store.dispatch(
             f"Insert Comment '{text}'",
-            lambda m: attachments.graph_graph_comments_insert(
+            lambda m: attachments.Graph.comments.insert(
                 m, self._context.graph_key, position,
                 dsviper.ValueUUId.create(), text))
 
@@ -75,7 +75,7 @@ class CommentsModel(QAbstractListModel):
         old_text = self._items[selected_row][1]
         self._context.store.dispatch(
             f"Update Comment '{old_text}' to '{text}'",
-            lambda m: attachments.graph_graph_comments_update(
+            lambda m: attachments.Graph.comments.update(
                 m, self._context.graph_key, position, text))
 
     @Slot(int)
@@ -86,7 +86,7 @@ class CommentsModel(QAbstractListModel):
         text = self._items[selected_row][1]
         self._context.store.dispatch(
             f"Remove Comment '{text}'",
-            lambda m: attachments.graph_graph_comments_remove(
+            lambda m: attachments.Graph.comments.remove(
                 m, self._context.graph_key, position))
 
     def _on_database_did_open(self):
@@ -107,9 +107,9 @@ class CommentsModel(QAbstractListModel):
         try:
             attachment_getting = self._context.store.attachment_getting()
             graph_key = self._context.graph_key
-            opt_comments = attachments.graph_graph_comments_get(attachment_getting, graph_key)
+            opt_comments = attachments.Graph.comments.get(attachment_getting, graph_key)
             if opt_comments:
-                comments = opt_comments.unwrap()
+                comments = opt_comments
                 for position, element in comments.items():
                     new_items.append((position, element))
         except Exception as e:

@@ -1,76 +1,67 @@
 from dsviper import AttachmentMutating, AttachmentGetting
 
-from ge import attachments
-from ge.data import (
-    Graph_GraphKey,
-    Graph_VertexKey,
-    Graph_EdgeKey,
-    Graph_GraphTopology,
-    Graph_GraphSelection,
-    Set_Graph_VertexKey,
-    Set_Graph_EdgeKey,
-    Map_string_to_string,
-    XArray_string)
+from gei.graph import attachments
+from gei import graph
 
-from model import tools
+from ge import tools
 
 
-def clear(attachment_mutating: AttachmentMutating, graph_key: Graph_GraphKey) -> None:
+def clear(attachment_mutating: AttachmentMutating, graph_key: graph.GraphKey) -> None:
     """Clear all topology, selection, comments, and tags from a graph."""
-    attachments.graph_graph_topology_set(attachment_mutating, graph_key, Graph_GraphTopology())
-    attachments.graph_graph_selection_set(attachment_mutating, graph_key, Graph_GraphSelection())
-    attachments.graph_graph_comments_set(attachment_mutating, graph_key, XArray_string())
-    attachments.graph_graph_tags_set(attachment_mutating, graph_key, Map_string_to_string())
+    attachments.Graph.topology.set(attachment_mutating, graph_key, graph.GraphTopology())
+    attachments.Graph.selection.set(attachment_mutating, graph_key, graph.GraphSelection())
+    attachments.Graph.comments.set(attachment_mutating, graph_key, list[str]())
+    attachments.Graph.tags.set(attachment_mutating, graph_key, dict[str, str]())
 
 
 def remove(attachment_mutating: AttachmentMutating,
-           graph_key: Graph_GraphKey,
-           vertex_keys: Set_Graph_VertexKey,
-           edge_keys: Set_Graph_EdgeKey) -> None:
+           graph_key: graph.GraphKey,
+           vertex_keys: set[graph.VertexKey],
+           edge_keys: set[graph.EdgeKey]) -> None:
     """Remove vertices and edges from the graph, including connected edges."""
-    topology_edge_keys = Set_Graph_EdgeKey()
-    opt = attachments.graph_graph_topology_get(attachment_mutating, graph_key)
+    topology_edge_keys = set[graph.EdgeKey]()
+    opt = attachments.Graph.topology.get(attachment_mutating, graph_key)
     if opt:
-        topology_edge_keys = opt.unwrap().edge_keys
+        topology_edge_keys = opt.edge_keys
 
     # Find edges connected to removed vertices
-    connected_edge_keys = Set_Graph_EdgeKey()
+    connected_edge_keys = set[graph.EdgeKey]()
     for vertex_key in vertex_keys:
         for edge_key in topology_edge_keys:
-            opt_edge = attachments.graph_edge_topology_get(attachment_mutating, edge_key)
+            opt_edge = attachments.Edge.topology.get(attachment_mutating, edge_key)
             if not opt_edge:
                 continue
-            edge = opt_edge.unwrap()
+            edge = opt_edge
             if edge.va_key == vertex_key or edge.vb_key == vertex_key:
                 connected_edge_keys.add(edge_key)
 
-    attachments.graph_graph_topology_subtract_vertex_keys(attachment_mutating, graph_key, vertex_keys)
+    attachments.Graph.topology.subtract_vertex_keys(attachment_mutating, graph_key, vertex_keys)
     all_edges_to_remove = tools.union_edge_keys(edge_keys, connected_edge_keys)
-    attachments.graph_graph_topology_subtract_edge_keys(attachment_mutating, graph_key, all_edges_to_remove)
+    attachments.Graph.topology.subtract_edge_keys(attachment_mutating, graph_key, all_edges_to_remove)
 
 
 def remove_bugged(attachment_mutating: AttachmentMutating,
-                  graph_key: Graph_GraphKey,
-                  vertex_keys: Set_Graph_VertexKey) -> None:
+                  graph_key: graph.GraphKey,
+                  vertex_keys: set[graph.VertexKey]) -> None:
     """Remove vertices without removing connected edges (intentionally buggy)."""
-    attachments.graph_graph_topology_subtract_vertex_keys(attachment_mutating, graph_key, vertex_keys)
+    attachments.Graph.topology.subtract_vertex_keys(attachment_mutating, graph_key, vertex_keys)
 
 
 def has_edge(attachment_getting: AttachmentGetting,
-             graph_key: Graph_GraphKey,
-             va_key: Graph_VertexKey,
-             vb_key: Graph_VertexKey) -> Graph_EdgeKey | None:
+             graph_key: graph.GraphKey,
+             va_key: graph.VertexKey,
+             vb_key: graph.VertexKey) -> graph.EdgeKey | None:
     """Check if an edge exists between two vertices, return the edge key if found."""
-    opt = attachments.graph_graph_topology_get(attachment_getting, graph_key)
+    opt = attachments.Graph.topology.get(attachment_getting, graph_key)
     if not opt:
         return None
 
-    topology = opt.unwrap()
+    topology = opt
     for edge_key in topology.edge_keys:
-        opt_edge = attachments.graph_edge_topology_get(attachment_getting, edge_key)
+        opt_edge = attachments.Edge.topology.get(attachment_getting, edge_key)
         if not opt_edge:
             continue
-        edge = opt_edge.unwrap()
+        edge = opt_edge
 
         if ((edge.va_key == va_key and edge.vb_key == vb_key) or
             (edge.va_key == vb_key and edge.vb_key == va_key)):
@@ -79,30 +70,30 @@ def has_edge(attachment_getting: AttachmentGetting,
     return None
 
 
-def has_vertices(attachment_getting: AttachmentGetting, graph_key: Graph_GraphKey) -> bool:
+def has_vertices(attachment_getting: AttachmentGetting, graph_key: graph.GraphKey) -> bool:
     """Check if the graph has any vertices."""
-    opt = attachments.graph_graph_topology_get(attachment_getting, graph_key)
+    opt = attachments.Graph.topology.get(attachment_getting, graph_key)
     if opt:
-        return len(opt.unwrap().vertex_keys) > 0
+        return len(opt.vertex_keys) > 0
     return False
 
 
-def has_edges(attachment_getting: AttachmentGetting, graph_key: Graph_GraphKey) -> bool:
+def has_edges(attachment_getting: AttachmentGetting, graph_key: graph.GraphKey) -> bool:
     """Check if the graph has any edges."""
-    opt = attachments.graph_graph_topology_get(attachment_getting, graph_key)
+    opt = attachments.Graph.topology.get(attachment_getting, graph_key)
     if opt:
-        return len(opt.unwrap().edge_keys) > 0
+        return len(opt.edge_keys) > 0
     return False
 
 
-def has_remaining_edges(attachment_getting: AttachmentGetting, graph_key: Graph_GraphKey) -> bool:
+def has_remaining_edges(attachment_getting: AttachmentGetting, graph_key: graph.GraphKey) -> bool:
     """Check if there are remaining edges that can be added to the graph."""
-    vertex_keys = Set_Graph_VertexKey()
-    edge_keys = Set_Graph_EdgeKey()
+    vertex_keys = set[graph.VertexKey]()
+    edge_keys = set[graph.EdgeKey]()
 
-    opt = attachments.graph_graph_topology_get(attachment_getting, graph_key)
+    opt = attachments.Graph.topology.get(attachment_getting, graph_key)
     if opt:
-        topology = opt.unwrap()
+        topology = opt
         vertex_keys = topology.vertex_keys
         edge_keys = topology.edge_keys
 

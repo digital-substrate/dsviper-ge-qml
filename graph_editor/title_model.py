@@ -6,8 +6,8 @@ from __future__ import annotations
 
 from PySide6.QtCore import QObject, Property, Signal, Slot
 
-from model.context import Context
-from ge import attachments
+from ge.context import Context
+from gei.graph import attachments
 
 
 class TitleModel(QObject):
@@ -44,7 +44,7 @@ class TitleModel(QObject):
         label = f"Set Title To '{new_title}'"
         self._context.store.dispatch(
             label,
-            lambda m: attachments.graph_graph_description_set_name(
+            lambda m: attachments.Graph.description.set_name(
                 m, self._context.graph_key, new_title))
 
     def _on_database_did_open(self):
@@ -59,10 +59,10 @@ class TitleModel(QObject):
 
     def _configure(self):
         try:
-            opt = attachments.graph_graph_description_get(
+            opt = attachments.Graph.description.get(
                 self._context.store.attachment_getting(), self._context.graph_key)
             if opt:
-                description = opt.unwrap()
+                description = opt
                 if description.name != self._title:
                     self._title = description.name
                     self.titleChanged.emit()

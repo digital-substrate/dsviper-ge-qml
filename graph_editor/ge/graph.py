@@ -1,25 +1,19 @@
 from dsviper import AttachmentMutating
 
-from ge import attachments
-from ge.data import (
-    Graph_GraphKey,
-    Graph_GraphDescription,
-    Graph_GraphTopology,
-    Graph_GraphSelection,
-    Map_string_to_string,
-    XArray_string)
+from gei.graph import attachments
+from gei import graph
 
 
-def create(attachment_mutating: AttachmentMutating, name: str) -> Graph_GraphKey:
-    graph_key = Graph_GraphKey.create()
+def create(attachment_mutating: AttachmentMutating, name: str) -> graph.GraphKey:
+    graph_key = graph.GraphKey.create()
 
-    description = Graph_GraphDescription()
+    description = graph.GraphDescription()
     description.name = name
 
-    attachments.graph_graph_description_set(attachment_mutating, graph_key, description)
-    attachments.graph_graph_topology_set(attachment_mutating, graph_key, Graph_GraphTopology())
-    attachments.graph_graph_tags_set(attachment_mutating, graph_key, Map_string_to_string())
-    attachments.graph_graph_comments_set(attachment_mutating, graph_key, XArray_string())
-    attachments.graph_graph_selection_set(attachment_mutating, graph_key, Graph_GraphSelection())
+    attachments.Graph.description.set(attachment_mutating, graph_key, description)
+    attachments.Graph.topology.set(attachment_mutating, graph_key, graph.GraphTopology())
+    attachments.Graph.tags.set(attachment_mutating, graph_key, dict[str, str]())
+    attachments.Graph.comments.set(attachment_mutating, graph_key, list[str]())
+    attachments.Graph.selection.set(attachment_mutating, graph_key, graph.GraphSelection())
 
     return graph_key

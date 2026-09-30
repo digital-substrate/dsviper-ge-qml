@@ -8,15 +8,10 @@ from __future__ import annotations
 from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, Property
 from PySide6.QtGui import QColor
 
-from model.context import Context
-from model import selection_mixed
-from ge import attachments
-from ge.data import (
-    Graph_VertexKey,
-    Graph_EdgeKey,
-    Set_Graph_VertexKey,
-    Set_Graph_EdgeKey,
-)
+from ge.context import Context
+from ge import selection_mixed
+from gei.graph import attachments
+from gei import graph
 from list.element import ListVertex, ListEdge
 from graph_sorted_by_value import GraphSortedByValue
 from dsviper_components_qml.collection_difference import OrderedCollectionDifference
@@ -121,8 +116,8 @@ class ListModel(QAbstractListModel):
 
     @Slot(list)
     def setSelection(self, selected_indices):
-        selected_vertices = Set_Graph_VertexKey()
-        selected_edges = Set_Graph_EdgeKey()
+        selected_vertices = set[graph.VertexKey]()
+        selected_edges = set[graph.EdgeKey]()
 
         for row in selected_indices:
             if 0 <= row < len(self._elements):
@@ -169,10 +164,10 @@ class ListModel(QAbstractListModel):
             # Build sorted list
             sorted_graph = GraphSortedByValue.build(attachment_getting, graph_key)
 
-            vertex_keys = Set_Graph_VertexKey()
-            opt_topology = attachments.graph_graph_topology_get(attachment_getting, graph_key)
+            vertex_keys = set[graph.VertexKey]()
+            opt_topology = attachments.Graph.topology.get(attachment_getting, graph_key)
             if opt_topology:
-                vertex_keys = opt_topology.unwrap().vertex_keys
+                vertex_keys = opt_topology.vertex_keys
 
             for sorted_vertex in sorted_graph.sorted_vertices():
                 list_vertex = self._create_list_vertex(
@@ -186,11 +181,11 @@ class ListModel(QAbstractListModel):
                     new_elements.append(list_edge)
 
             # Build selection
-            sel_vertex_keys = Set_Graph_VertexKey()
-            sel_edge_keys = Set_Graph_EdgeKey()
-            opt_selection = attachments.graph_graph_selection_get(attachment_getting, graph_key)
+            sel_vertex_keys = set[graph.VertexKey]()
+            sel_edge_keys = set[graph.EdgeKey]()
+            opt_selection = attachments.Graph.selection.get(attachment_getting, graph_key)
             if opt_selection:
-                selection = opt_selection.unwrap()
+                selection = opt_selection
                 sel_vertex_keys = selection.vertex_keys
                 sel_edge_keys = selection.edge_keys
 
@@ -247,9 +242,9 @@ class ListModel(QAbstractListModel):
                     self.index(0), self.index(len(new_elements) - 1))
 
     def _create_list_vertex(self, getting, vertex_key, vertex_keys) -> ListVertex:
-        opt_attrs = attachments.graph_vertex_visual_attributes_get(getting, vertex_key)
+        opt_attrs = attachments.Vertex.visual_attributes.get(getting, vertex_key)
         if opt_attrs:
-            attrs = opt_attrs.unwrap()
+            attrs = opt_attrs
             value = attrs.value
             color = QColor(
                 int(attrs.color.red * 255),

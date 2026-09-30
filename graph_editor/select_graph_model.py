@@ -6,8 +6,8 @@ from __future__ import annotations
 
 from PySide6.QtCore import QObject, QAbstractListModel, Qt, Property, Signal, Slot
 
-from model.context import Context
-from ge import attachments
+from ge.context import Context
+from gei.graph import attachments
 
 
 class SelectGraphModel(QAbstractListModel):
@@ -69,12 +69,12 @@ class SelectGraphModel(QAbstractListModel):
 
         try:
             attachment_getting = context.store.attachment_getting()
-            graph_keys = attachments.graph_graph_description_keys(attachment_getting)
+            graph_keys = attachments.Graph.description.keys(attachment_getting)
             for graph_key in graph_keys:
-                opt = attachments.graph_graph_description_get(attachment_getting, graph_key)
+                opt = attachments.Graph.description.get(attachment_getting, graph_key)
                 if not opt:
                     continue
-                description = opt.unwrap()
+                description = opt
                 self._items.append((description.name, graph_key))
 
             self._items.sort(key=lambda item: item[0])

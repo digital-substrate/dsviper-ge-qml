@@ -57,7 +57,7 @@ class _ModifierHelper(QObject):
     currentModifier = Property(int, _get_current_modifier, notify=modifierChanged)
 
 
-from model.context import Context
+from ge.context import Context
 
 from dsviper_components_qml.commit_admin_model import CommitAdminModel
 from dsviper_components_qml.documents_panel_model import DocumentsPanelModel

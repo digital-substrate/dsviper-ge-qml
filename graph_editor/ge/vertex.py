@@ -1,45 +1,38 @@
 from dsviper import AttachmentMutating
 
-from ge import attachments
-from ge.data import (
-    Graph_GraphKey,
-    Graph_VertexKey,
-    Graph_VertexVisualAttributes,
-    Graph_Vertex2DAttributes,
-    Graph_Position,
-    Graph_Color,
-    Set_Graph_VertexKey)
+from gei.graph import attachments
+from gei import graph
 
 
 def create(attachment_mutating: AttachmentMutating,
            value: int,
-           position: Graph_Position,
-           color: Graph_Color) -> Graph_VertexKey:
+           position: graph.Position,
+           color: graph.Color) -> graph.VertexKey:
 
-    vertex_key = Graph_VertexKey.create()
+    vertex_key = graph.VertexKey.create()
 
-    visual_attributes = Graph_VertexVisualAttributes()
+    visual_attributes = graph.VertexVisualAttributes()
     visual_attributes.value = value
     visual_attributes.color = color
-    attachments.graph_vertex_visual_attributes_set(attachment_mutating, vertex_key, visual_attributes)
+    attachments.Vertex.visual_attributes.set(attachment_mutating, vertex_key, visual_attributes)
 
-    render_attributes = Graph_Vertex2DAttributes()
+    render_attributes = graph.Vertex2DAttributes()
     render_attributes.position = position
-    attachments.graph_vertex_render_2d_attributes_set(attachment_mutating, vertex_key, render_attributes)
+    attachments.Vertex.render_2d_attributes.set(attachment_mutating, vertex_key, render_attributes)
 
     return vertex_key
 
 
 def add(attachment_mutating: AttachmentMutating,
-        graph_key: Graph_GraphKey,
+        graph_key: graph.GraphKey,
         value: int,
-        position: Graph_Position,
-        color: Graph_Color) -> Graph_VertexKey:
+        position: graph.Position,
+        color: graph.Color) -> graph.VertexKey:
 
     vertex_key = create(attachment_mutating, value, position, color)
 
-    vertex_keys = Set_Graph_VertexKey()
+    vertex_keys = set[graph.VertexKey]()
     vertex_keys.add(vertex_key)
-    attachments.graph_graph_topology_union_vertex_keys(attachment_mutating, graph_key, vertex_keys)
+    attachments.Graph.topology.union_vertex_keys(attachment_mutating, graph_key, vertex_keys)
 
     return vertex_key

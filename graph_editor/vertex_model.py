@@ -9,9 +9,9 @@ from PySide6.QtCore import QObject, QPointF, Property, Signal, Slot
 from PySide6.QtGui import QColor
 
 from transient_notifier import TransientNotifier
-from model.context import Context
-from ge import attachments
-from ge.data import Graph_VertexKey, Graph_Color, Graph_Position
+from ge.context import Context
+from gei.graph import attachments
+from gei import graph
 
 
 class VertexModel(QObject):
@@ -26,7 +26,7 @@ class VertexModel(QObject):
     def __init__(self, notifier, parent=None):
         super().__init__(parent)
         self._context = Context.instance()
-        self._vertex_key: Graph_VertexKey | None = None
+        self._vertex_key: graph.VertexKey | None = None
         self._value: int = 0
         self._color: QColor = QColor(255, 255, 255)
         self._location: QPointF = QPointF()
@@ -82,7 +82,7 @@ class VertexModel(QObject):
         label = f"Set Value '{new_value}' For Vertex '{self._value}'"
         self._context.store.dispatch(
             label,
-            lambda m: attachments.graph_vertex_visual_attributes_set_value(
+            lambda m: attachments.Vertex.visual_attributes.set_value(
                 m, self._vertex_key, new_value))
 
     @Slot(int)
@@ -98,14 +98,14 @@ class VertexModel(QObject):
     def setColor(self, new_color: QColor):
         if not self._vertex_key:
             return
-        color = Graph_Color()
+        color = graph.Color()
         color.red = new_color.redF()
         color.green = new_color.greenF()
         color.blue = new_color.blueF()
         label = f"Set Color For Vertex '{self._value}'"
         self._context.store.dispatch(
             label,
-            lambda m: attachments.graph_vertex_visual_attributes_set_color(
+            lambda m: attachments.Vertex.visual_attributes.set_color(
                 m, self._vertex_key, color))
 
     @Slot(QColor)
@@ -129,13 +129,13 @@ class VertexModel(QObject):
         if not self._vertex_key:
             return
         self._location = QPointF(x, self._location.y())
-        position = Graph_Position()
+        position = graph.Position()
         position.x = int(self._location.x())
         position.y = int(self._location.y())
         label = f"Set Position.X To {x} For Vertex '{self._value}'"
         self._context.store.dispatch(
             label,
-            lambda m: attachments.graph_vertex_render_2d_attributes_set_position(
+            lambda m: attachments.Vertex.render_2d_attributes.set_position(
                 m, self._vertex_key, position))
 
     @Slot(int)
@@ -143,13 +143,13 @@ class VertexModel(QObject):
         if not self._vertex_key:
             return
         self._location = QPointF(self._location.x(), y)
-        position = Graph_Position()
+        position = graph.Position()
         position.x = int(self._location.x())
         position.y = int(self._location.y())
         label = f"Set Position.Y To {y} For Vertex '{self._value}'"
         self._context.store.dispatch(
             label,
-            lambda m: attachments.graph_vertex_render_2d_attributes_set_position(
+            lambda m: attachments.Vertex.render_2d_attributes.set_position(
                 m, self._vertex_key, position))
 
     @Slot(int)
@@ -208,9 +208,9 @@ class VertexModel(QObject):
             graph_key = self._context.graph_key
 
             vertex_keys = set()
-            opt_selection = attachments.graph_graph_selection_get(attachment_getting, graph_key)
+            opt_selection = attachments.Graph.selection.get(attachment_getting, graph_key)
             if opt_selection:
-                selection = opt_selection.unwrap()
+                selection = opt_selection
                 vertex_keys = set(selection.vertex_keys)
 
             if len(vertex_keys) == 1:
@@ -241,10 +241,10 @@ class VertexModel(QObject):
 
         self._value = 0
         self._color = QColor(255, 255, 255)
-        opt_visual = attachments.graph_vertex_visual_attributes_get(
+        opt_visual = attachments.Vertex.visual_attributes.get(
             attachment_getting, self._vertex_key)
         if opt_visual:
-            visual = opt_visual.unwrap()
+            visual = opt_visual
             self._value = visual.value
             self._color = QColor(
                 int(visual.color.red * 255),
@@ -252,10 +252,10 @@ class VertexModel(QObject):
                 int(visual.color.blue * 255))
 
         self._location = QPointF()
-        opt_render = attachments.graph_vertex_render_2d_attributes_get(
+        opt_render = attachments.Vertex.render_2d_attributes.get(
             attachment_getting, self._vertex_key)
         if opt_render:
-            render = opt_render.unwrap()
+            render = opt_render
             self._location = QPointF(render.position.x, render.position.y)
 
         if self._value != old_value:

@@ -10,14 +10,14 @@ from PySide6.QtCore import QObject, QUrl, Property, Signal, Slot
 
 from dsviper import CommitDatabase, ViperError, Error
 
-from model.context import Context
-from model import graph_topology, selection_vertices, selection_edges, selection_mixed
-from model import graph_bug, graph_integrity, graph_killer
-from model import random as model_random
-from model import edge as model_edge
-from model import tools as model_tools
-from model import script_delete_selection
-from ge.data import Graph_Rectangle
+from ge.context import Context
+from ge import graph_topology, selection_vertices, selection_edges, selection_mixed
+from ge import graph_bug, graph_integrity, graph_killer
+from ge import random as model_random
+from ge import edge as model_edge
+from ge import tools as model_tools
+from ge import script_delete_selection
+from gei import graph
 
 
 class ContextManager(QObject):
@@ -303,7 +303,7 @@ class ContextManager(QObject):
 
     @Slot(int, int)
     def randomGraph(self, width, height):
-        rect = Graph_Rectangle()
+        rect = graph.Rectangle()
         rect.x, rect.y, rect.w, rect.h = 0, 0, width, height
         self._context.store.dispatch(
             "Random Graph",
@@ -311,7 +311,7 @@ class ContextManager(QObject):
 
     @Slot(int, int)
     def randomVertex(self, width, height):
-        rect = Graph_Rectangle()
+        rect = graph.Rectangle()
         rect.x, rect.y, rect.w, rect.h = 0, 0, width, height
         self._context.store.dispatch(
             "Random Vertex",

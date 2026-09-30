@@ -11,21 +11,21 @@ from typing import Optional
 from PySide6.QtCore import QObject, QPointF, QRectF, Property, Signal, Slot
 from PySide6.QtGui import QColor, QFontMetrics, QGuiApplication
 
-from model.context import Context
+from ge.context import Context
 from transient_notifier import TransientNotifier
-from ge.data import Graph_GraphKey, Graph_VertexKey, Graph_Position
+from gei import graph
 from render.graph import RenderGraph
 from render.vertex import RenderVertex
 from render import graph_builder
 import colors
 
-from model import selection_vertices
-from model import selection_edges
-from model import selection_mixed
-from model import vertex as model_vertex
-from model import edge as model_edge
-from model import random as model_random
-from model import tools
+from ge import selection_vertices
+from ge import selection_edges
+from ge import selection_mixed
+from ge import vertex as model_vertex
+from ge import edge as model_edge
+from ge import random as model_random
+from ge import tools
 
 
 class RenderModel(QObject):
@@ -37,7 +37,7 @@ class RenderModel(QObject):
     def __init__(self, notifier, parent=None):
         super().__init__(parent)
         self._context = Context.instance()
-        self._graph_key: Optional[Graph_GraphKey] = None
+        self._graph_key: Optional[graph.GraphKey] = None
         self._render_graph: Optional[RenderGraph] = None
         self._is_drag_canceled = False
         self._canvas_width = 0.0
@@ -303,7 +303,7 @@ class RenderModel(QObject):
         if is_control:
             value = tools.next_vertex_value(attachment_getting, self._render_graph.graph_key)
             label = f"New Vertex '{value}'"
-            position = Graph_Position()
+            position = graph.Position()
             position.x = x
             position.y = self._canvas_height - y
             color = model_random.make_color()
@@ -383,21 +383,21 @@ class RenderModel(QObject):
             dx = int(self._render_graph.interactive_drag_offset.x())
             dy = int(self._render_graph.interactive_drag_offset.y())
             length = math.sqrt(dx * dx + dy * dy)
-            offset = Graph_Position()
+            offset = graph.Position()
             offset.x = dx
             offset.y = -dy
             s_offset = f" By ({dx},{dy})"
 
             if self._render_graph.move_copy_data:
                 if length > 30:
-                    from model import script_move_copy
+                    from ge import script_move_copy
                     move_copy_data = self._render_graph.move_copy_data
                     graph_key = self._graph_key
                     self._context.store.dispatch(
                         f"Move/Copy Selection{s_offset}",
                         lambda m: script_move_copy.run(m, graph_key, move_copy_data, offset))
             else:
-                from model import graph_vertices
+                from ge import graph_vertices
                 vertex_keys = self._render_graph.interactive_vertex_keys
                 self._context.store.dispatch(
                     f"Move Selection{s_offset}",
@@ -460,21 +460,21 @@ class RenderModel(QObject):
 
     # --- Transient notifications
 
-    def _vertex_value_changed(self, key: Graph_VertexKey, value: int):
+    def _vertex_value_changed(self, key: graph.VertexKey, value: int):
         if self._render_graph:
             vertex = self._render_graph.vertex_map.get(key)
             if vertex:
                 vertex.value = value
                 self.graphChanged.emit()
 
-    def _vertex_color_changed(self, key: Graph_VertexKey, color: QColor):
+    def _vertex_color_changed(self, key: graph.VertexKey, color: QColor):
         if self._render_graph:
             vertex = self._render_graph.vertex_map.get(key)
             if vertex:
                 vertex.color = color
                 self.graphChanged.emit()
 
-    def _vertex_position_changed(self, key: Graph_VertexKey, position: QPointF):
+    def _vertex_position_changed(self, key: graph.VertexKey, position: QPointF):
         if self._render_graph:
             vertex = self._render_graph.vertex_map.get(key)
             if vertex:
