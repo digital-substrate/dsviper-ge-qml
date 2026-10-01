@@ -68,14 +68,14 @@ class StatisticsModel(QObject):
         vertex_keys = containers.Set_of_Graph_VertexKey()
         edge_keys = containers.Set_of_Graph_EdgeKey()
         if opt := attachments.Graph.topology.get(attachment_getting, graph_key):
-            topology = opt
+            topology = opt.unwrap()
             vertex_keys = topology.vertex_keys
             edge_keys = topology.edge_keys
 
         selected_vertex_keys = containers.Set_of_Graph_VertexKey()
         selected_edge_keys = containers.Set_of_Graph_EdgeKey()
         if opt := attachments.Graph.selection.get(attachment_getting, graph_key):
-            selection = opt
+            selection = opt.unwrap()
             selected_vertex_keys = selection.vertex_keys
             selected_edge_keys = selection.edge_keys
 
@@ -86,7 +86,7 @@ class StatisticsModel(QObject):
         for vertex_key in vertex_keys:
             opt = attachments.Vertex.visual_attributes.get(attachment_getting, vertex_key)
             if opt:
-                values.append(opt.value)
+                values.append(opt.unwrap().value)
 
         if values:
             self._min_max_text = f"{min(values):03d}/{max(values):03d}"

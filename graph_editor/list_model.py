@@ -167,7 +167,7 @@ class ListModel(QAbstractListModel):
             vertex_keys = containers.Set_of_Graph_VertexKey()
             opt_topology = attachments.Graph.topology.get(attachment_getting, graph_key)
             if opt_topology:
-                vertex_keys = opt_topology.vertex_keys
+                vertex_keys = opt_topology.unwrap().vertex_keys
 
             for sorted_vertex in sorted_graph.sorted_vertices():
                 list_vertex = self._create_list_vertex(
@@ -185,7 +185,7 @@ class ListModel(QAbstractListModel):
             sel_edge_keys = containers.Set_of_Graph_EdgeKey()
             opt_selection = attachments.Graph.selection.get(attachment_getting, graph_key)
             if opt_selection:
-                selection = opt_selection
+                selection = opt_selection.unwrap()
                 sel_vertex_keys = selection.vertex_keys
                 sel_edge_keys = selection.edge_keys
 
@@ -244,7 +244,7 @@ class ListModel(QAbstractListModel):
     def _create_list_vertex(self, getting, vertex_key, vertex_keys) -> ListVertex:
         opt_attrs = attachments.Vertex.visual_attributes.get(getting, vertex_key)
         if opt_attrs:
-            attrs = opt_attrs
+            attrs = opt_attrs.unwrap()
             value = attrs.value
             color = QColor(
                 int(attrs.color.red * 255),

@@ -74,7 +74,7 @@ class SelectGraphModel(QAbstractListModel):
                 opt = attachments.Graph.description.get(attachment_getting, graph_key)
                 if not opt:
                     continue
-                description = opt
+                description = opt.unwrap()
                 self._items.append((description.name, graph_key))
 
             self._items.sort(key=lambda item: item[0])

@@ -109,7 +109,7 @@ class CommentsModel(QAbstractListModel):
             graph_key = self._context.graph_key
             opt_comments = attachments.Graph.comments.get(attachment_getting, graph_key)
             if opt_comments:
-                comments = opt_comments
+                comments = opt_comments.unwrap()
                 for position, element in comments.items():
                     new_items.append((position, element))
         except Exception as e:

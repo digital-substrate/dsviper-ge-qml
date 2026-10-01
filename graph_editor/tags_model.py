@@ -104,7 +104,7 @@ class TagsModel(QAbstractListModel):
             graph_key = self._context.graph_key
             opt_tags = attachments.Graph.tags.get(attachment_getting, graph_key)
             if opt_tags:
-                tags = opt_tags
+                tags = opt_tags.unwrap()
                 for key, value in tags.items():
                     new_items.append((key, value))
         except Exception as e:

@@ -62,7 +62,7 @@ class TitleModel(QObject):
             opt = attachments.Graph.description.get(
                 self._context.store.attachment_getting(), self._context.graph_key)
             if opt:
-                description = opt
+                description = opt.unwrap()
                 if description.name != self._title:
                     self._title = description.name
                     self.titleChanged.emit()
