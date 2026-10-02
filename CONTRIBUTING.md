@@ -36,7 +36,7 @@ A QML app built on the shared `dsviper_components_qml/` library (Python models +
 - `graph_editor/` — the Graph Editor: render canvas, vertex/edge operations, Python editor
 - `dsviper_components_qml/` — synced from `dsviper-components-qml` (see the README); don't edit it here
 
-`graph_editor/gei/` is generated from the Graph Editor model by `generate.py`: don't
+`graph_editor/gei/` is generated from the Graph Editor model as `kibo.toml` declares: don't
 edit it by hand, regenerate it (see the README) and commit the result. The business
 functions belong in `graph_editor/ge/`.
 
