@@ -441,19 +441,19 @@ class RenderModel(QObject):
         # Try vertex first
         vertex = self._render_graph.pick_vertex(location)
         if vertex:
-            self.inspectKey.emit(vertex.vertex_key.vpr_value)
+            self.inspectKey.emit(vertex.vertex_key.unwrap_value())
             return True
 
         # Then edge
         edge = self._render_graph.pick_edge(
             QRectF(0, 0, self._canvas_width, self._canvas_height), location)
         if edge:
-            self.inspectKey.emit(edge.edge_key.vpr_value)
+            self.inspectKey.emit(edge.edge_key.unwrap_value())
             return True
 
         # Then graph
         if self._graph_key:
-            self.inspectKey.emit(self._graph_key.vpr_value)
+            self.inspectKey.emit(self._graph_key.unwrap_value())
             return True
 
         return False
