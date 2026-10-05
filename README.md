@@ -61,9 +61,9 @@ of the AppKit reference application, whose definitions live in
 from gei import graph
 from gei.graph import attachments
 
-topology = attachments.Graph.topology.get(attachment_getting, graph_key)   # the document, or None
-if topology:
-    vertex_keys = topology.vertex_keys
+opt = attachments.Graph.topology.get(attachment_getting, graph_key)   # an optional, empty when there is no document
+if opt:
+    vertex_keys = opt.unwrap().vertex_keys
 
 attachments.Graph.selection.union_vertex_keys(attachment_mutating, graph_key, {vertex_key})
 ```
@@ -88,7 +88,7 @@ python3 ../kibo-project/kibo_project.py generate
 declares leaves no file behind.
 
 Only the `Base` feature is generated: types, attachments and the embedded definitions.
-The model's function pools belong to GraphEditor's C++ side and are left out.
+The model's function pools belong to a C++ application and are left out.
 
 `tests/golden/scenario.py` runs the functions of `ge/` step by step on an in-memory
 database and compares every document left behind with `tests/golden/golden.json`:

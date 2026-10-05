@@ -11,15 +11,16 @@ runtime version (declared as a dependency in `requirements.txt`).
 ## [Unreleased]
 
 ### Changed
+- Requires `dsviper >= 1.2.29`, the floor of the code kibo-template-viper 2.0.0 generates.
 - The typed infrastructure is generated from the Graph Editor model as `kibo.toml`
-  declares, by kibo-project (kibo 2): the package `graph_editor/gei`, with the types in `gei.graph` and one scope
+  declares, by kibo-project (kibo 2.0.0, kibo-template-viper 2.0.0): the package `graph_editor/gei`, with the types in `gei.graph` and one scope
   per attachment in `gei.graph.attachments` (`attachments.Graph.topology.union_vertex_keys`).
   It replaces the copy of the 1.2 generated package that lived under `graph_editor/ge/`,
-  and leaves out the model's function pools, which belong to GraphEditor's C++ side.
+  and leaves out the model's function pools, which belong to a C++ application.
 - The business functions, formerly `graph_editor/model/`, are the package `ge`.
-- Written against `gei`: a typed container is a Python one (`set[graph.VertexKey]()`
-  rather than `Set_Graph_VertexKey()`), `get` returns the document or `None` with no
-  optional to unwrap, and fields and methods are spelled in snake_case.
+- Written against `gei`: a typed container is the package's declared one
+  (`containers.Set_of_Graph_VertexKey()` rather than `Set_Graph_VertexKey()`), `get`
+  returns an optional to unwrap, and fields and methods are spelled in snake_case.
 
 ### Added
 - `tests/golden/scenario.py`: the business functions run step by step on an in-memory
