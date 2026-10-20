@@ -9,7 +9,7 @@ import dsviper
 from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, Property
 
 from ge.context import Context
-from gei.graph import attachments
+from gei.graph import commit_attachments as attachments
 
 from dsviper_components_qml.collection_difference import OrderedCollectionDifference
 

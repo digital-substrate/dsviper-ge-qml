@@ -10,7 +10,7 @@ from PySide6.QtGui import QColor
 
 from ge.context import Context
 from ge import selection_mixed
-from gei.graph import attachments
+from gei.graph import commit_attachments as attachments
 from gei import containers, graph
 from list.element import ListVertex, ListEdge
 from graph_sorted_by_value import GraphSortedByValue

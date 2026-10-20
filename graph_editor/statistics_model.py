@@ -7,7 +7,7 @@ from __future__ import annotations
 from PySide6.QtCore import QObject, Property, Signal
 
 from ge.context import Context
-from gei.graph import attachments
+from gei.graph import commit_attachments as attachments
 from gei import containers, graph
 
 

@@ -7,7 +7,7 @@ from __future__ import annotations
 from PySide6.QtCore import QObject, QAbstractListModel, Qt, Property, Signal, Slot
 
 from ge.context import Context
-from gei.graph import attachments
+from gei.graph import commit_attachments as attachments
 
 
 class SelectGraphModel(QAbstractListModel):
